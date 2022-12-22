@@ -2,14 +2,10 @@
 
 namespace OC\Share20;
 
-use Closure;
-use OCA\Files_Sharing\DefaultShareDisplayTemplateProvider;
 use OCP\Server;
 use OCP\Share\IShare;
 use OCP\Share\IShareDisplayTemplateFactory;
 use OCP\Share\IShareDisplayTemplateProvider;
-
-use function Safe\sort;
 
 class ShareDisplayTemplateFactory implements IShareDisplayTemplateFactory {
 	/**
@@ -26,10 +22,10 @@ class ShareDisplayTemplateFactory implements IShareDisplayTemplateFactory {
 		 * @var IShareDisplayTemplateProvider[]
 		 */
 		$providers = array_map(
-			fn($providerClass) => Server::get($providerClass),
+			fn ($providerClass) => Server::get($providerClass),
 			$this->displayShareTemplateProviders
 		);
-		usort($providers, fn(IShareDisplayTemplateProvider $a, IShareDisplayTemplateProvider $b) => $b->getPriority() - $a->getPriority());
+		usort($providers, fn (IShareDisplayTemplateProvider $a, IShareDisplayTemplateProvider $b) => $b->getPriority() - $a->getPriority());
 		$filteredProviders = array_filter($providers, fn (IShareDisplayTemplateProvider $provider) => $provider->shouldRespond($share));
 		return $filteredProviders[0];
 	}

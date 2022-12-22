@@ -99,6 +99,7 @@ class ShareController extends AuthPublicShareController {
 	protected ShareManager $shareManager;
 	protected ISecureRandom $secureRandom;
 	protected ?Share\IShare $share = null;
+	private Share\IShareDisplayTemplateFactory $shareDisplayTemplateFactory;
 
 	public function __construct(
 		string $appName,
@@ -118,7 +119,7 @@ class ShareController extends AuthPublicShareController {
 		IL10N $l10n,
 		ISecureRandom $secureRandom,
 		Defaults $defaults,
-		private Share\IShareDisplayTemplateFactory $shareDisplayTemplateFactory,
+		Share\IShareDisplayTemplateFactory $shareDisplayTemplateFactory
 	) {
 		parent::__construct($appName, $request, $session, $urlGenerator);
 
@@ -135,6 +136,7 @@ class ShareController extends AuthPublicShareController {
 		$this->secureRandom = $secureRandom;
 		$this->defaults = $defaults;
 		$this->shareManager = $shareManager;
+		$this->shareDisplayTemplateFactory = $shareDisplayTemplateFactory;
 	}
 
 	public const SHARE_ACCESS = 'access';

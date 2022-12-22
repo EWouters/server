@@ -126,7 +126,7 @@ class DefaultShareDisplayTemplateProvider implements IShareDisplayTemplateProvid
 			if ($freeSpace < FileInfo::SPACE_UNLIMITED) {
 				$freeSpace = (int)max($freeSpace, 0);
 			} else {
-				$freeSpace = (INF > 0) ? INF: PHP_INT_MAX; // work around https://bugs.php.net/bug.php?id=69188
+				$freeSpace = (int)((INF > 0) ? INF: PHP_INT_MAX); // work around https://bugs.php.net/bug.php?id=69188
 			}
 
 			$hideFileList = !($share->getPermissions() & Constants::PERMISSION_READ);
@@ -165,7 +165,7 @@ class DefaultShareDisplayTemplateProvider implements IShareDisplayTemplateProvid
 		$shareTmpl['previewEnabled'] = $this->config->getSystemValue('enable_previews', true);
 		$shareTmpl['previewMaxX'] = $this->config->getSystemValue('preview_max_x', 1024);
 		$shareTmpl['previewMaxY'] = $this->config->getSystemValue('preview_max_y', 1024);
-		$shareTmpl['disclaimer'] = $this->config->getAppValue('core', 'shareapi_public_link_disclaimertext', null);
+		$shareTmpl['disclaimer'] = $this->config->getAppValue('core', 'shareapi_public_link_disclaimertext', '');
 		$shareTmpl['previewURL'] = $shareTmpl['downloadURL'];
 
 		if ($shareTmpl['previewSupported']) {
