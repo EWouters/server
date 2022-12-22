@@ -4,7 +4,6 @@ namespace OCA\Files_Sharing;
 
 use OCA\FederatedFileSharing\FederatedShareProvider;
 use OCA\Files_Sharing\AppInfo\Application;
-use OCA\Files_Sharing\Controller\ShareController;
 use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\Accounts\IAccountManager;
@@ -66,6 +65,14 @@ class DefaultShareDisplayTemplateProvider implements IShareDisplayTemplateProvid
 		$this->defaults = $defaults;
 		$this->config = $config;
 		$this->request = $request;
+	}
+
+	public function shouldRespond(IShare $share): bool {
+		return true;
+	}
+
+	public function getPriority(): int {
+		return 0;
 	}
 
 	public function renderPage(IShare $share, string $token, string $path): TemplateResponse {

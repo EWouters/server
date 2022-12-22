@@ -6,10 +6,8 @@ interface IShareDisplayTemplateFactory {
 	/**
 	 * Register new display share template
 	 * @param class-string<IShareDisplayTemplateProvider> $shareDisplayTemplateClass
-	 * @param \Closure(IShare $share): bool $condition
-	 * @return void
 	 */
-	public function registerDisplayShareTemplate(string $shareDisplayTemplateClass, \Closure $condition): void;
+	public function registerDisplayShareTemplate(string $shareDisplayTemplateClass): void;
 
-	public function getTemplate(IShare $share): IShareDisplayTemplateProvider;
+	public function getTemplateProvider(IShare $share): IShareDisplayTemplateProvider;
 }

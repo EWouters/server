@@ -9,25 +9,28 @@ use OCP\Share\IShare;
 use OCP\Share\IShareDisplayTemplateFactory;
 use OCP\Share\IShareDisplayTemplateProvider;
 
+use function Safe\sort;
+
 class ShareDisplayTemplateFactory implements IShareDisplayTemplateFactory {
 	/**
-	 * @var list<array{class: class-string<IShareDisplayTemplateFactory>, condition: Closure(IShare): bool} $displayShareTemplateProviders
+	 * @var class-string<IShareDisplayTemplateProvider>[] $displayShareTemplateProviders
 	 */
 	private array $displayShareTemplateProviders = [];
 
-	public function registerDisplayShareTemplate(string $shareDisplayTemplateClass, Closure $condition): void {
-		$this->displayShareTemplateProviders[] = [
-			'class' => $shareDisplayTemplateClass,
-			'condition' => $condition,
-		];
+	public function registerDisplayShareTemplate(string $shareDisplayTemplateClass): void {
+		$this->displayShareTemplateProviders[] = $shareDisplayTemplateClass;
 	}
 
-	public function getTemplate(IShare $share): IShareDisplayTemplateProvider {
-		foreach ($this->displayShareTemplateProviders as $provider) {
-			if ($provider['condition']($share)) {
-				return Server::get($provider['class']);
-			}
-		}
-		return Server::get(DefaultShareDisplayTemplateProvider::class);
+	public function getTemplateProvider(IShare $share): IShareDisplayTemplateProvider {
+		/**
+		 * @var IShareDisplayTemplateProvider[]
+		 */
+		$providers = array_map(
+			fn($providerClass) => Server::get($providerClass),
+			$this->displayShareTemplateProviders
+		);
+		usort($providers, fn(IShareDisplayTemplateProvider $a, IShareDisplayTemplateProvider $b) => $b->getPriority() - $a->getPriority());
+		$filteredProviders = array_filter($providers, fn (IShareDisplayTemplateProvider $provider) => $provider->shouldRespond($share));
+		return $filteredProviders[0];
 	}
 }

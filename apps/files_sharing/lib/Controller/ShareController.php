@@ -99,26 +99,27 @@ class ShareController extends AuthPublicShareController {
 	protected ShareManager $shareManager;
 	protected ISecureRandom $secureRandom;
 	protected ?Share\IShare $share = null;
-	private Share\IShareDisplayTemplateFactory $shareDisplayTemplateFactory;
 
-	public function __construct(string $appName,
-								IRequest $request,
-								IConfig $config,
-								IURLGenerator $urlGenerator,
-								IUserManager $userManager,
-								ILogger $logger,
-								\OCP\Activity\IManager $activityManager,
-								ShareManager $shareManager,
-								ISession $session,
-								IPreview $previewManager,
-								IRootFolder $rootFolder,
-								FederatedShareProvider $federatedShareProvider,
-								IAccountManager $accountManager,
-								IEventDispatcher $eventDispatcher,
-								IL10N $l10n,
-								ISecureRandom $secureRandom,
-								Defaults $defaults,
-								Share\IShareDisplayTemplateFactory $shareDisplayTemplateFactory) {
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		IConfig $config,
+		IURLGenerator $urlGenerator,
+		IUserManager $userManager,
+		ILogger $logger,
+		\OCP\Activity\IManager $activityManager,
+		ShareManager $shareManager,
+		ISession $session,
+		IPreview $previewManager,
+		IRootFolder $rootFolder,
+		FederatedShareProvider $federatedShareProvider,
+		IAccountManager $accountManager,
+		IEventDispatcher $eventDispatcher,
+		IL10N $l10n,
+		ISecureRandom $secureRandom,
+		Defaults $defaults,
+		private Share\IShareDisplayTemplateFactory $shareDisplayTemplateFactory,
+	) {
 		parent::__construct($appName, $request, $session, $urlGenerator);
 
 		$this->config = $config;
@@ -134,7 +135,6 @@ class ShareController extends AuthPublicShareController {
 		$this->secureRandom = $secureRandom;
 		$this->defaults = $defaults;
 		$this->shareManager = $shareManager;
-		$this->shareDisplayTemplateFactory = $shareDisplayTemplateFactory;
 	}
 
 	public const SHARE_ACCESS = 'access';
@@ -372,8 +372,8 @@ class ShareController extends AuthPublicShareController {
 
 
 		try {
-			$template = $this->shareDisplayTemplateFactory->getTemplate($share);
-			$response = $template->renderPage($share, $this->getToken(), $path);
+			$templateProvider = $this->shareDisplayTemplateFactory->getTemplateProvider($share);
+			$response = $templateProvider->renderPage($share, $this->getToken(), $path);
 		} catch (NotFoundException $e) {
 			$this->emitAccessShareHook($share, 404, 'Share not found');
 			$this->emitShareAccessEvent($share, ShareController::SHARE_ACCESS, 404, 'Share not found');
