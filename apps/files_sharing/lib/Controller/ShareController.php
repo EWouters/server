@@ -77,6 +77,7 @@ use OCP\Share;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager as ShareManager;
 use OCP\Share\IShare;
+use OCP\Share\IShareDisplayTemplateFactory;
 use OCP\Template;
 
 /**
@@ -99,7 +100,7 @@ class ShareController extends AuthPublicShareController {
 	protected ShareManager $shareManager;
 	protected ISecureRandom $secureRandom;
 	protected ?Share\IShare $share = null;
-	private Share\IShareDisplayTemplateFactory $shareDisplayTemplateFactory;
+	private IShareDisplayTemplateFactory $shareDisplayTemplateFactory;
 
 	public function __construct(
 		string $appName,
@@ -119,7 +120,7 @@ class ShareController extends AuthPublicShareController {
 		IL10N $l10n,
 		ISecureRandom $secureRandom,
 		Defaults $defaults,
-		Share\IShareDisplayTemplateFactory $shareDisplayTemplateFactory
+		IShareDisplayTemplateFactory $shareDisplayTemplateFactory
 	) {
 		parent::__construct($appName, $request, $session, $urlGenerator);
 
