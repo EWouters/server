@@ -27,6 +27,6 @@ class ShareDisplayTemplateFactory implements IShareDisplayTemplateFactory {
 		);
 		usort($providers, fn (IShareDisplayTemplateProvider $a, IShareDisplayTemplateProvider $b) => $b->getPriority() - $a->getPriority());
 		$filteredProviders = array_filter($providers, fn (IShareDisplayTemplateProvider $provider) => $provider->shouldRespond($share));
-		return $filteredProviders[0];
+		return array_shift($filteredProviders);
 	}
 }

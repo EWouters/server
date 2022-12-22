@@ -53,6 +53,7 @@ use OCA\Files_Sharing\Notification\Listener;
 use OCA\Files_Sharing\Notification\Notifier;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
+use OCA\Files_Sharing\DefaultShareDisplayTemplateProvider;
 use OCP\Files\Event\BeforeDirectGetEvent;
 use OCA\Files_Sharing\ShareBackend\File;
 use OCA\Files_Sharing\ShareBackend\Folder;
@@ -131,6 +132,10 @@ class Application extends App implements IBootstrap {
 		 * Always add main sharing script
 		 */
 		Util::addScript(self::APP_ID, 'main');
+
+		$container = $context->getServerContainer();
+		$factory = $container->get(\OCP\Share\IShareDisplayTemplateFactory::class);
+		$factory->registerDisplayShareTemplate(DefaultShareDisplayTemplateProvider::class);
 	}
 
 
